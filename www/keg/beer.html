@@ -1,0 +1,278 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>::::Crooked Helmet Tap House::::</title>
+    <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="beer.css">
+</head>
+    <body>
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <h1><p align='center'> ::::Crooked Helmet Tap House::::</h1></p>
+	<h2><p align='center' id='currentTemp'></h2></p>
+	<h2><p align='center' id='setTemp'></h2></p>
+<!--//-->
+
+
+	<table align='center'><col><col id='middle'><col><col id='middle'><col><col><col><col><thead><th>Tap</th><th>Beer</th><th>Brewery</th><th>Style</th><th>ABV</th><th>Hops</th><th>SRM</th><th>Stock</th><th>Pints</th></thead>
+	    <tr>
+	        <td><h2>1</h2></td>
+		<td><h2 id="tap1_name">Empty</h2></td>
+		<td id="tap1_brewery">-</td>
+		<td id=tap1_style>-</td>
+		<td id="tap1_abv">-</td>
+		<td><img id="tap1_hops" src='/kegerface/images/0 Hops.png' width='200'</td>
+		<td><img id="tap1_color" src='/kegerface/images/SRM 0.png' height='75'</td>
+		<td><img id="tap1_volume" src='/kegerface/images/kegs/0 .png' width='40'></td>
+		<td id="tap1_pints">0</td>
+	    </tr>
+	    <tr>
+		<td><h2>2</h2></td>
+		<td><h2 id="tap2_name">Empty</h2></td>
+		<td id="tap2_brewery">-</td>
+		<td id=tap2_style>-</td>
+		<td id="tap2_abv">-</td>
+		<td><img id="tap2_hops" src='/kegerface/images/0 Hops.png' width='200'</td>
+		<td><img id="tap2_color" src='/kegerface/images/SRM 0.png' height='75'</td>
+		<td><img id="tap2_volume" src='/kegerface/images/kegs/0 .png' width='40'></td>
+		<td id="tap2_pints">0</td>
+	    </tr>
+	    <tr>
+		<td><h2>3</h2></td>
+		<td><h2 id="tap3_name">Empty</h2></td>
+		<td id="tap3_brewery">-</td>
+		<td id=tap3_style>-</td>
+		<td id="tap3_abv">-</td>
+		<td><img id="tap3_hops" src='/kegerface/images/0 Hops.png' width='200'</td>
+		<td><img id="tap3_color" src='/kegerface/images/SRM 0.png' height='75'</td>
+		<td><img id="tap3_volume" src='/kegerface/images/kegs/0 .png' width='40'></td>
+		<td id="tap3_pints">0</td>
+	    </tr>
+	    <tr>
+		<td><h2>4</h2></td>
+		<td><h2 id="tap4_name">Empty</h2></td>
+		<td id="tap4_brewery">-</td>
+		<td id=tap4_style>-</td>
+		<td id="tap4_abv">-</td>
+		<td><img id="tap4_hops" src='/kegerface/images/0 Hops.png' width='200'</td>
+		<td><img id="tap4_color" src='/kegerface/images/SRM 0.png' height='75'</td>
+		<td><img id="tap4_volume" src='/kegerface/images/kegs/0 .png' width='40'></td>
+		<td id="tap4_pints">0</td>
+	    </tr>
+	</table>
+    <script>
+	$(function() {
+	    setInterval(function(){
+	   $.getJSON('/keg/get_temps.php','',processTemps);
+	    function processTemps(data){
+	        $('#currentTemp').html("Current Temp: "+data[0].value.toFixed(1)+" Degrees");
+		$('#setTemp').html("Set Temp: "+data[1].value.toFixed(1)+" Degrees");
+	    }
+      	    $.getJSON('/keg/mysql_query.php','',processBeers);
+	    function processBeers(data){
+		$('#tap1_name').html(data.tap1.name);
+                $('#tap1_brewery').html(data.tap1.brewery);
+                $('#tap1_style').html(data.tap1.style);
+                $('#tap1_abv').html(data.tap1.abv);
+		$('#tap1_pints').html(Math.floor(data.tap1.volume/16));
+		 if(data.tap1.volume==0){
+                    stock='0';
+                }
+
+                else if(data.tap1.volume<65){
+                    stock='10';
+                }
+
+                else if(data.tap1.volume<161){
+                    stock='25';
+                }
+
+                else if(data.tap1.volume<321){
+                    stock='50';
+                }
+
+                else if(data.tap1.volume<481){
+                    stock='75';
+                }
+
+                else{
+                    stock='100';
+                }
+
+                $('#tap1_volume').attr('src','/kegerface/images/kegs/'+stock+' .png');
+		$('#tap1_color').attr('src','/kegerface/images/SRM '+String(data.tap1.srm)+'.png');
+		 if(data.tap1.ibu<21){
+                    hops='0';
+                }
+
+                else if (data.tap1.ibu<41){
+                    hops='1';
+                }
+
+                else if (data.tap1.ibu<61){
+                    hops='2';
+                }
+
+                else{
+                    hops='3';
+                }
+
+                $('#tap1_hops').attr('src','/kegerface/images/'+hops+' Hops.png');
+
+
+		$('#tap2_name').html(data.tap2.name);
+                $('#tap2_brewery').html(data.tap2.brewery);
+                $('#tap2_style').html(data.tap2.style);
+                $('#tap2_abv').html(data.tap2.abv);
+		$('#tap2_pints').html(Math.floor(data.tap2.volume/16));
+		 if(data.tap2.volume==0){
+                    stock='0';
+                }
+
+                else if(data.tap2.volume<65){
+                    stock='10';
+                }
+
+                else if(data.tap2.volume<161){
+                    stock='25';
+                }
+
+                else if(data.tap2.volume<321){
+                    stock='50';
+                }
+
+                else if(data.tap2.volume<481){
+                    stock='75';
+                }
+
+                else{
+                    stock='100';
+                }
+
+                $('#tap2_volume').attr('src','/kegerface/images/kegs/'+stock+' .png');            
+		$('#tap2_color').attr('src','/kegerface/images/SRM '+String(data.tap2.srm)+'.png');		
+
+		if(data.tap2.ibu<21){
+                    hops='0';
+                }
+
+                else if (data.tap2.ibu<41){
+                    hops='1';
+                }
+
+                else if (data.tap2.ibu<61){
+                    hops='2';
+                }
+
+                else{
+                    hops='3';
+                }
+
+                $('#tap2_hops').attr('src','/kegerface/images/'+hops+' Hops.png');
+
+		$('#tap3_name').html(data.tap3.name);
+		$('#tap3_brewery').html(data.tap3.brewery);
+		$('#tap3_style').html(data.tap3.style);
+		$('#tap3_abv').html(data.tap3.abv);
+		if(data.tap3.volume==0){
+		    stock='0';
+		}
+		
+		else if(data.tap3.volume<65){
+		    stock='10';
+		}
+		
+		else if(data.tap3.volume<161){
+		    stock='25';
+		}
+		
+		else if(data.tap3.volume<321){
+		    stock='50';
+		}
+
+		else if(data.tap3.volume<481){
+		    stock='75';
+		}
+
+		else{
+		    stock='100';
+		}
+
+		$('#tap3_volume').attr('src','/kegerface/images/kegs/'+stock+' .png');
+		$('#tap3_pints').html(Math.floor(data.tap3.volume/16));
+		$('#tap3_color').attr('src','/kegerface/images/SRM '+String(data.tap3.srm)+'.png');
+		if(data.tap3.ibu<21){
+		    hops='0';
+		}
+
+		else if (data.tap3.ibu<41){
+		    hops='1';
+		}
+
+		else if (data.tap3.ibu<61){
+		    hops='2';
+		}
+
+		else{
+		    hops='3';
+		}
+
+		$('#tap3_hops').attr('src','/kegerface/images/'+hops+' Hops.png');
+             
+		$('#tap4_name').html(data.tap4.name);
+                $('#tap4_brewery').html(data.tap4.brewery);
+                $('#tap4_style').html(data.tap4.style);
+                $('#tap4_abv').html(data.tap4.abv);
+		$('#tap4_pints').html(Math.floor(data.tap4.volume/16));
+		 if(data.tap4.volume==0){
+                    stock='0';
+                }
+
+                else if(data.tap4.volume<65){
+                    stock='10';
+                }
+
+                else if(data.tap4.volume<161){
+                    stock='25';
+                }
+
+                else if(data.tap4.volume<321){
+                    stock='50';
+                }
+
+                else if(data.tap4.volume<481){
+                    stock='75';
+                }
+
+                else{
+                    stock='100';
+                }
+
+                $('#tap4_volume').attr('src','/kegerface/images/kegs/'+stock+' .png');
+		$('#tap4_color').attr('src','/kegerface/images/SRM '+String(data.tap4.srm)+'.png');
+		if(data.tap4.ibu<21){
+                    hops='0';
+                }
+
+                else if (data.tap4.ibu<41){
+                    hops='1';
+                }
+
+                else if (data.tap4.ibu<61){
+                    hops='2';
+                }
+
+                else{
+                    hops='3';
+                }
+
+                $('#tap4_hops').attr('src','/kegerface/images/'+hops+' Hops.png');
+
+	    }
+	    },1000);
+	});//end ready
+    </script>
+    </body>
+</html>
