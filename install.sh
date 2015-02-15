@@ -1,3 +1,8 @@
+#!/bin/bash
+if [ "$(id -u)" != "0" ]; then
+    echo "Please re-run as root."
+    exit 1
+fi
 apt-get install -y debconf-utils
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password beermenu'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password beermenu'
