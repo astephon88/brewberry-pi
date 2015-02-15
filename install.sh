@@ -18,5 +18,6 @@ python setup.py install
 #mysql schema setup
 mysql -uroot -pbeermenu -e "CREATE DATABASE IF NOT EXISTS beer"
 mysql -uroot -pbeermenu beer < schema.sql
+echo "dtoverlay=w1-gpio" >> /boot/config.txt
 service brewberryd start
 service temphandlerd start
