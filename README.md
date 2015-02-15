@@ -12,4 +12,3 @@ Addtional pre-reqs on a standard Raspbian Wheezy load include apache2, mysql-ser
 
 Hardware requirements include (of course) a raspberry pi, a food-safe flow meter (such as those sold by adafruit.com), a dallas 1-wire temperature sensor (again, can be found at adafruit.com), and a solid-state relay for the kegerator compressor switching.
 
-The install.sh script is not ready to be used yet(still needs the code for initializing the database), and the paths referenced in the scripts have not all been updated to match the eventual home of all the files in system directories (I'm running everyting out of the pi user's home directory currently). So, in it's current state, the scripts will need a little tweaking to get everything running on your system. 
