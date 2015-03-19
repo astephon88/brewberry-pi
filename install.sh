@@ -15,6 +15,7 @@ insserv brewberryd
 insserv temp_handlerd
 git clone https://github.com/timofurrer/w1thermsensor.git && cd w1thermsensor
 python setup.py install
+cd ..
 #mysql schema setup
 mysql -uroot -pbeermenu -e "CREATE DATABASE IF NOT EXISTS beer"
 mysql -uroot -pbeermenu beer < schema.sql
