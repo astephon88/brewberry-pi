@@ -20,5 +20,4 @@ cd ..
 mysql -uroot -pbeermenu -e "CREATE DATABASE IF NOT EXISTS beer"
 mysql -uroot -pbeermenu beer < schema.sql
 echo "dtoverlay=w1-gpio" >> /boot/config.txt
-service brewberryd start
-service temphandlerd start
+echo "Please restart your pi to enable the 1-Wire interface."
