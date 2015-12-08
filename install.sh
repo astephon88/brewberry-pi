@@ -9,15 +9,15 @@ debconf-set-selections <<< 'mysql-server mysql-server/root_password_again passwo
 apt-get install -y mysql-server python-mysqldb apache2 libapache2-mod-php5 php5 php5-mysql git
 cp -r www/* /var/www/
 mkdir -p /opt/brewberrypi
-cp flowmeter.py kegomatic.py temp_handler.py /opt/brewberrypi
+cp flowmeter.py brewberry.py temp_handler.py /opt/brewberrypi
 cp temp_handlerd brewberryd /etc/init.d/
 insserv brewberryd
 insserv temp_handlerd
 git clone https://github.com/timofurrer/w1thermsensor.git && cd w1thermsensor
 python setup.py install
+cd ..
 #mysql schema setup
 mysql -uroot -pbeermenu -e "CREATE DATABASE IF NOT EXISTS beer"
 mysql -uroot -pbeermenu beer < schema.sql
 echo "dtoverlay=w1-gpio" >> /boot/config.txt
-service brewberryd start
-service temphandlerd start
+echo "Please restart your pi to enable the 1-Wire interface."
