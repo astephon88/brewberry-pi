@@ -9,12 +9,23 @@
     <link rel="stylesheet" type="text/css" href="beer.css">
 </head>
     <body>
-        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="/jquery.knob.min.js"></script>
         <h1><p align='center'> ::::Crooked Helmet Tap House::::</h1></p>
-	<h2><p align='center' id='currentTemp'></h2></p>
-	<h2><p align='center' id='setTemp'></h2></p>
 <!--//-->
-
+	<table align='center'>
+		
+		<tr>
+			<td><p align='center'><input type="text" class="dial" id='set_dial' data-min="32" data-max="55" data-fgColor="#66CC66" data-angleOffset=-125 data-angleArc=250></p></td>
+			<td><p align='center'><input type="text" readOnly=true class="dial" id='current_dial' data-min="32" data-max="55" data-fgColor="#66CC66" data-angleOffset=-125 data-angleArc=250></p></td>
+		</tr>
+		<tr>
+			<td><h2><p align='center'>Set Temp</h2></p></td>
+			<td><h2><p align='center'>Current Temp</h2></p></td>
+		</tr>
+		
+		
+	</table>
 
 	<table align='center'><col><col id='middle'><col><col id='middle'><col><col><col><col><thead><th>Tap</th><th>Beer</th><th>Brewery</th><th>Style</th><th>ABV</th><th>Hops</th><th>SRM</th><th>Stock</th><th>Pints</th></thead>
 	    <tr>
@@ -63,15 +74,33 @@
 	    </tr>
 	</table>
     <script>
-	$(function() {
-	    setInterval(function(){
-	   $.getJSON('/keg/get_temps.php','',processTemps);
-	    function processTemps(data){
-	        $('#currentTemp').html("Current Temp: "+data[0].value.toFixed(1)+" Degrees");
-		$('#setTemp').html("Set Temp: "+data[1].value.toFixed(1)+" Degrees");
-	    }
-      	    $.getJSON('/keg/mysql_query.php','',processBeers);
-	    function processBeers(data){
+
+	pauseUpdate=false;	
+
+	function processSetTemp(data){
+                $('#set_dial').val(data[1].value.toFixed(1)).trigger('change');
+        }
+
+	function processCurrentTemp(data){
+                $('#current_dial').val(data[0].value.toFixed(1)).trigger('change');
+	}
+
+	function processAllTemps(data){
+		processSetTemp(data);
+		processCurrentTemp(data);
+	}
+	
+	function setTemp(new_temp){
+		$.ajax({
+			url:"/keg/set_temp.php",
+			data: {new_set_temp:new_temp},
+			type: "GET",
+			context: document.body});
+		pauseUpdate=false;
+	}
+
+
+	function processBeers(data){
 		$('#tap1_name').html(data.tap1.name);
                 $('#tap1_brewery').html(data.tap1.brewery);
                 $('#tap1_style').html(data.tap1.style);
@@ -271,6 +300,19 @@
                 $('#tap4_hops').attr('src','/kegerface/images/'+hops+' Hops.png');
 
 	    }
+	
+	$(function() {
+	    
+	    $.getJSON('/keg/get_temps.php','',processAllTemps);
+            $.getJSON('/keg/mysql_query.php','',processBeers);
+		
+            $('#set_dial').knob({'release':setTemp,'cancel':function(v){pauseUpdate=false;},'change':function(v){pauseUpdate=true;}});	    
+	    $('#current_dial').knob();
+	    setInterval(function(){
+		if (!pauseUpdate){
+			$.getJSON('/keg/get_temps.php','',processAllTemps);
+      	    		$.getJSON('/keg/mysql_query.php','',processBeers);
+		}
 	    },1000);
 	});//end ready
     </script>
